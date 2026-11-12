@@ -1,0 +1,27 @@
+name: Render Royal Premium Coffee Motion Ad
+on:
+  push:
+    paths:
+      - 'render_motion.py'
+      - '.github/workflows/render-video.yml'
+  workflow_dispatch:
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install rendering tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install pillow numpy
+      - name: Render MP4
+        run: python render_motion.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: royal-premium-coffee-motion-video
+          path: out/royal-premium-motion.mp4
+          retention-days: 14
